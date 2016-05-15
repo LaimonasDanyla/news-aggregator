@@ -85,8 +85,10 @@ APP.Main = (function() {
     }
 
     // Colorize on complete.
+    /*
     if (storyLoadCount === 0)
       colorizeAndScaleStories();
+    */
   }
 
   function onStoryClick(details) {
@@ -183,6 +185,7 @@ APP.Main = (function() {
       var storyDetailsPosition = storyDetails.getBoundingClientRect();
 
       // Set the left value if we don't have one already.
+      // LD: job eblow could be done with CSS
       if (left === null)
         left = storyDetailsPosition.left;
 
