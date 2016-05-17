@@ -63,7 +63,7 @@ APP.Main = (function() {
    */
   function onStoryData (key, details) {
 
-    var story = document.querySelectorAll('.story#s-' + key);
+    var story = document.querySelector('.story#s-' + key);
     details.time *= 1000;
     var html = storyTemplate(details);
     story.innerHTML = html;
