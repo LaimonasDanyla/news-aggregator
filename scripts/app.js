@@ -65,14 +65,8 @@ APP.Main = (function() {
 
     // This seems odd. Surely we could just select the story
     // directly rather than looping through all of them.
-    var storyElements = document.querySelectorAll('.story');
-
-    for (var i = 0; i < storyElements.length; i++) {
-
-      if (storyElements[i].getAttribute('id') === 's-' + key) {
-
+    var storyElements = document.querySelectorAll('.story#s-' + key);
         details.time *= 1000;
-        var story = storyElements[i];
         var html = storyTemplate(details);
         story.innerHTML = html;
         story.addEventListener('click', onStoryClick.bind(this, details));
@@ -160,7 +154,7 @@ APP.Main = (function() {
         });
       }
     }
-    showStory(details.id)
+    showStory(details.id);
   }
 
   function showStory(id) {
