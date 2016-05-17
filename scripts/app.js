@@ -48,6 +48,10 @@ APP.Main = (function() {
     tmplStoryDetailsComment = tmplStoryDetailsComment.replace(intlRelative, '');
   }
 
+  var storyDetails = document.createElement('section');
+  storyDetails.classList.add('story-details');
+  document.body.appendChild(storyDetails);
+
   var storyTemplate =
       Handlebars.compile(tmplStory);
   var storyDetailsTemplate =
@@ -74,44 +78,44 @@ APP.Main = (function() {
         storyLoadCount--;
       }
 
-    function onStoryClick(details) {
-      if (details.url)
-        details.urlobj = new URL(details.url);
+      function onStoryClick(details) {
+        if (details.url)
+          details.urlobj = new URL(details.url);
 
-      var comment;
-      var commentsElement;
-      var storyHeader;
-      var storyContent;
+        var comment;
+        var commentsElement;
+        var storyHeader;
+        var storyContent;
 
-      var storyDetailsHtml = storyDetailsTemplate(details);
-      var kids = details.kids;
-      var commentHtml = storyDetailsCommentTemplate({
-        by: '', text: 'Loading comment...'
-      });
+        var storyDetailsHtml = storyDetailsTemplate(details);
+        var kids = details.kids;
+        var commentHtml = storyDetailsCommentTemplate({
+          by: '', text: 'Loading comment...'
+        });
 
-      storyDetails.setAttribute('id', 'sd-' + details.id);
-      storyDetails.innerHTML = storyDetailsHtml;
+        storyDetails.setAttribute('id', 'sd-' + details.id);
+        storyDetails.innerHTML = storyDetailsHtml;
 
-      commentsElement = storyDetails.querySelector('.js-comments');
-      storyHeader = storyDetails.querySelector('.js-header');
-      storyContent = storyDetails.querySelector('.js-content');
+        commentsElement = storyDetails.querySelector('.js-comments');
+        storyHeader = storyDetails.querySelector('.js-header');
+        storyContent = storyDetails.querySelector('.js-content');
 
-      var closeButton = storyDetails.querySelector('.js-close');
-      closeButton.addEventListener('click', hideStory.bind(this, details.id));
+        var closeButton = storyDetails.querySelector('.js-close');
+        closeButton.addEventListener('click', hideStory.bind(this, details.id));
 
-      var headerHeight = storyHeader.getBoundingClientRect().height;
-      storyContent.style.paddingTop = headerHeight + 'px';
+        var headerHeight = storyHeader.getBoundingClientRect().height;
+        storyContent.style.paddingTop = headerHeight + 'px';
 
-      if (typeof kids === 'undefined')
-        return;
+        if (typeof kids === 'undefined')
+          return;
 
-      for (var k = 0; k < kids.length; k++) {
+        for (var k = 0; k < kids.length; k++) {
 
-        comment = document.createElement('aside');
-        comment.setAttribute('id', 'sdc-' + kids[k]);
-        comment.classList.add('story-details__comment');
-        comment.innerHTML = commentHtml;
-        commentsElement.appendChild(comment);
+          comment = document.createElement('aside');
+          comment.setAttribute('id', 'sdc-' + kids[k]);
+          comment.classList.add('story-details__comment');
+          comment.innerHTML = commentHtml;
+          commentsElement.appendChild(comment);
 
         // Update the comment with the live data.
         APP.Data.getStoryComment(kids[k], function(commentDetails) {
@@ -143,12 +147,10 @@ APP.Main = (function() {
   }
 
   main.addEventListener('scroll', function() {
-
     var header = $('header');
     var headerTitles = header.querySelector('.header__title-wrapper');
     var scrollTopCapped = Math.min(70, main.scrollTop);
     var scaleString = 'scale(' + (1 - (scrollTopCapped / 300)) + ')';
-
 
     header.style.height = (156 - scrollTopCapped) + 'px';
     headerTitles.style.webkitTransform = scaleString;
