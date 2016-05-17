@@ -63,42 +63,18 @@ APP.Main = (function() {
    */
   function onStoryData (key, details) {
 
-    // This seems odd. Surely we could just select the story
-    // directly rather than looping through all of them.
-    var storyElements = document.querySelectorAll('.story#s-' + key);
-        details.time *= 1000;
-        var html = storyTemplate(details);
-        story.innerHTML = html;
-        story.addEventListener('click', onStoryClick.bind(this, details));
-        story.classList.add('clickable');
+    var story = document.querySelectorAll('.story#s-' + key);
+    details.time *= 1000;
+    var html = storyTemplate(details);
+    story.innerHTML = html;
+    story.addEventListener('click', onStoryClick.bind(this, details));
+    story.classList.add('clickable');
 
         // Tick down. When zero we can batch in the next load.
         storyLoadCount--;
-
       }
-    }
 
-    // Colorize on complete.
-    /*
-    if (storyLoadCount === 0)
-      colorizeAndScaleStories();
-    */
-  }
-
-  function onStoryClick(details) {
-
-    //var storyDetails = $('sd-' + details.id);
-
-    //Wait a little time then show the story details.
-    //setTimeout(showStory.bind(this, details.id), 60);
-
-    // Create and append the story. A visual change...
-    // perhaps that should be in a requestAnimationFrame?
-    // And maybe, since they're all the same, I don't
-    // need to make a new element every single time? I mean,
-    // it inflates the DOM and I can only see one at once.
-    //if (!storyDetails) {
-
+    function onStoryClick(details) {
       if (details.url)
         details.urlobj = new URL(details.url);
 
@@ -113,12 +89,8 @@ APP.Main = (function() {
         by: '', text: 'Loading comment...'
       });
 
-      //storyDetails = document.createElement('section');
       storyDetails.setAttribute('id', 'sd-' + details.id);
-      //storyDetails.classList.add('story-details');
       storyDetails.innerHTML = storyDetailsHtml;
-
-      //document.body.appendChild(storyDetails);
 
       commentsElement = storyDetails.querySelector('.js-comments');
       storyHeader = storyDetails.querySelector('.js-header');
@@ -153,7 +125,7 @@ APP.Main = (function() {
               localeData);
         });
       }
-    }
+
     showStory(details.id);
   }
 
@@ -177,7 +149,6 @@ APP.Main = (function() {
     var scrollTopCapped = Math.min(70, main.scrollTop);
     var scaleString = 'scale(' + (1 - (scrollTopCapped / 300)) + ')';
 
-    /*colorizeAndScaleStories();*/
 
     header.style.height = (156 - scrollTopCapped) + 'px';
     headerTitles.style.webkitTransform = scaleString;
@@ -197,7 +168,6 @@ APP.Main = (function() {
   });
 
   function loadStoryBatch() {
-
     if (storyLoadCount > 0)
       return;
 
@@ -226,12 +196,13 @@ APP.Main = (function() {
 
     storyStart += count;
 
+    requestAnimationFrame(loadStoryBatch);
   }
 
   // Bootstrap in the stories.
   APP.Data.getTopStories(function(data) {
     stories = data;
-    loadStoryBatch();
+    requestAnimationFrame(loadStoryBatch);
     main.classList.remove('loading');
   });
 
